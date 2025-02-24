@@ -24,13 +24,13 @@ jobs:
 
       - name: Build and Tag Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:latest .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/myapp:latest ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/democicd:latest .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/democicd:latest ${{ secrets.DOCKER_USERNAME }}/democicd:${{ github.sha }}
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/democicd:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/democicd:${{ github.sha }}
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:80 ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/democicd:latest
+            docker stop democicd || true
+            docker rm democicd || true
+            docker run -d --name democicd -p 80:80 ${{ secrets.DOCKER_USERNAME }}/democicd:latest
